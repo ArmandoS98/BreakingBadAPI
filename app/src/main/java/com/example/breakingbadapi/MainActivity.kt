@@ -1,11 +1,9 @@
 package com.example.breakingbadapi
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import androidx.recyclerview.widget.GridLayoutManager
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.breakingbadapi.Adapters.BreakingBadAdapter
 import com.example.breakingbadapi.Pojos.Character
 import com.example.breakingbadapi.RetrofitServices.ICharacters
@@ -24,12 +22,6 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-        recyclerAdapter = BreakingBadAdapter(this) { item ->
-            Log.d(TAG, "onCreate: ${item.nickname}")
-        }
-        recycle.layoutManager = LinearLayoutManager(this)
-        recycle.adapter = recyclerAdapter
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.breakingbadapi.com/api/")
@@ -52,7 +44,7 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "-> ${it.nickname}")
                     }
 
-                    characters?.let { recyclerAdapter.setSuperHeroes(it) }
+                    characters?.let { recyclerInit(it) }
 
                 } else
                     Log.e(TAG, "onResponse: ${response.code()}")
@@ -63,5 +55,19 @@ class MainActivity : AppCompatActivity() {
             }
 
         })
+    }
+
+    private fun recyclerInit(it: List<Character>) {
+        recyclerAdapter = BreakingBadAdapter(this) { item, position, status ->
+            Log.d(TAG, "onCreate: ${item.nickname}")
+
+            it[position].isSelected = status
+            Log.d(TAG, "onCreate: ${it[position].isSelected}")
+
+            recyclerAdapter.setSuperHeroes(it)
+        }
+        recycle.layoutManager = LinearLayoutManager(this)
+        recycle.adapter = recyclerAdapter
+        recyclerAdapter.setSuperHeroes(it)
     }
 }

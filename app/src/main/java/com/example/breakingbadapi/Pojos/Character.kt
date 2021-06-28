@@ -11,5 +11,7 @@ data class Character(
     var appearance: List<Int>,
     var portrayed: String,
     var category: String,
-    var better_call_saul_appearance: List<Int>
+    var better_call_saul_appearance: List<Int>,
+    var isSelected: Boolean = false
+
 )

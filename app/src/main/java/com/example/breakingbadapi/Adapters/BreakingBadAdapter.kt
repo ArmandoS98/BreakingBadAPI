@@ -12,15 +12,17 @@ import com.example.breakingbadapi.Pojos.Character
 import com.example.breakingbadapi.R
 import kotlinx.android.synthetic.main.item_card.view.*
 
-class BreakingBadAdapter(private val contexto: Context, private val listener: (Character) -> Unit) :
+class BreakingBadAdapter(
+    private val contexto: Context,
+    private val listener: (Character, position: Int, status: Boolean) -> Unit
+) :
     RecyclerView.Adapter<BreakingBadAdapter.ViewHolder>() {
 
     var movieList: List<Character> = listOf()
-    var isCheckt = false
 
     fun setSuperHeroes(movieList: List<Character>) {
         this.movieList = movieList;
-        notifyDataSetChanged()
+        //notifyDataSetChanged()
     }
 
     fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachRoot: Boolean = false): View {
@@ -43,34 +45,50 @@ class BreakingBadAdapter(private val contexto: Context, private val listener: (C
 
         //Heart - Animation
         val lottieAnim = holder.itemView.laHeart
+
+        //Esto es cuando scroliando y que detecte si algo cambio o no en la vista
+        if (movieList[position].isSelected){
+            lottieAnim.speed = 1f
+            lottieAnim.playAnimation()
+        }else{
+            lottieAnim.speed = 0f
+            lottieAnim.playAnimation()
+        }
+
+        //Este se ejecuta cuando el usuario da click
         lottieAnim.setOnClickListener {
+            var isCheckt = movieList[position].isSelected
+            Log.d(TAG, "onBindViewHolder IN: ${isCheckt}")
+            val statusC: Boolean
             if (isCheckt) {
-                lottieAnim.speed = 1f
-                lottieAnim.playAnimation()
-                isCheckt = false
-                Log.d(TAG, "onBindViewHolder: false")
-            } else {
                 lottieAnim.speed = 0f
                 lottieAnim.playAnimation()
+                isCheckt = false
+                statusC = isCheckt
+                Log.d(TAG, "onBindViewHolder OUT: false")
+            } else {
+                lottieAnim.speed = 1f
+                lottieAnim.playAnimation()
                 isCheckt = true
-                Log.d(TAG, "onBindViewHolder: true")
+                statusC = isCheckt
+                Log.d(TAG, "onBindViewHolder OUT: true")
             }
-            listener(movieList[position])
+            listener(movieList[position], position, statusC)
         }
     }
 
     override fun getItemCount() = movieList.size
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v)/*, View.OnClickListener*/ {
+    class ViewHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
         private var view: View = v
 
         init {
-//            v.setOnClickListener(this)
+            v.setOnClickListener(this)
         }
 
-        /*  override fun onClick(v: View?) {
-              Log.d(TAG, "onClick: Ejecutandose")
-          }*/
+        override fun onClick(v: View?) {
+            Log.d(TAG, "onClick: Ejecutandose")
+        }
 
         companion object {
             private val PHOTO_KEY = "KEY"

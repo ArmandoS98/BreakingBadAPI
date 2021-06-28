@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">BreakingBadAPI</string>
+    <string name="key_character">character</string>
 </resources>

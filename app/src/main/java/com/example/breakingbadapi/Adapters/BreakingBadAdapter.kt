@@ -1,13 +1,17 @@
 package com.example.breakingbadapi.Adapters
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.annotation.LayoutRes
+import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.example.breakingbadapi.DetailsActivity
 import com.example.breakingbadapi.Pojos.Character
 import com.example.breakingbadapi.R
 import kotlinx.android.synthetic.main.item_card.view.*
@@ -47,10 +51,10 @@ class BreakingBadAdapter(
         val lottieAnim = holder.itemView.laHeart
 
         //Esto es cuando scroliando y que detecte si algo cambio o no en la vista
-        if (movieList[position].isSelected){
+        if (movieList[position].isSelected) {
             lottieAnim.speed = 1f
             lottieAnim.playAnimation()
-        }else{
+        } else {
             lottieAnim.speed = 0f
             lottieAnim.playAnimation()
         }
@@ -79,7 +83,7 @@ class BreakingBadAdapter(
 
     override fun getItemCount() = movieList.size
 
-    class ViewHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
+    inner class ViewHolder(v: View) : RecyclerView.ViewHolder(v), View.OnClickListener {
         private var view: View = v
 
         init {
@@ -87,13 +91,11 @@ class BreakingBadAdapter(
         }
 
         override fun onClick(v: View?) {
-            Log.d(TAG, "onClick: Ejecutandose")
+            val item: Character = movieList[adapterPosition]
+            var intent = Intent(v?.context, DetailsActivity::class.java)
+            intent.putExtra(v?.context?.getString(R.string.key_character), item)
+            v?.context?.startActivity(intent)
         }
-
-        companion object {
-            private val PHOTO_KEY = "KEY"
-        }
-
     }
 
     companion object {

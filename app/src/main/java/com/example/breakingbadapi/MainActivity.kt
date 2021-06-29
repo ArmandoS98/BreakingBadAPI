@@ -74,10 +74,10 @@ class MainActivity : AppCompatActivity() {
 
                     //val valor = (temp?.size?.minus(1))
                     //for (i in valor!! until characters.size) {
-                     //   Log.d(TAG, "onResponse: ${temp!![i]?.name}")
+                    //   Log.d(TAG, "onResponse: ${temp!![i]?.name}")
                     //}
 
-                     characters?.let { recyclerInit(it) }
+                    characters?.let { recyclerInit(it) }
 
                 } else
                     Log.e(TAG, "onResponse: ${response.code()}")
@@ -94,11 +94,37 @@ class MainActivity : AppCompatActivity() {
         recyclerAdapter = BreakingBadAdapter(this) { item, position, status ->
 
             //save to favorites
-            SharedPrefManager().setStringPrefVal(
-                applicationContext,
-                getString(R.string.kfav),
-                addToFavorites(item.char_id)
-            )
+            if (status)
+                SharedPrefManager().setStringPrefVal(
+                    applicationContext,
+                    getString(R.string.kfav),
+                    addToFavorites(item.char_id)
+                )
+            else {
+                //Eliminar
+                val temp = getFavorites()
+                val list = temp?.split(",")
+                var nueva = ""
+                for (i in list!!.indices) {
+                    if (!list[i].equals(item.char_id)) {
+                        if (nueva.isEmpty())
+                            nueva = list[i]
+                        else {
+                            nueva = "$nueva,${list[i]}"
+                        }
+                    }
+                }
+
+                Log.d(TAG, "recyclerInit: $nueva")
+
+                SharedPrefManager().setStringPrefVal(
+                    applicationContext,
+                    getString(R.string.kfav),
+                    nueva
+                )
+
+                getFavorites()
+            }
 
             it[position].isSelected = status
             recyclerAdapter.setSuperHeroes(it)

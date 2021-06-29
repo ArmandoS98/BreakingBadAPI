@@ -14,6 +14,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
+
 class MainActivity : AppCompatActivity() {
 
     lateinit var recyclerAdapter: BreakingBadAdapter
@@ -22,6 +23,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        getFavorites()
 
         val retrofit = Retrofit.Builder()
             .baseUrl("https://www.breakingbadapi.com/api/")
@@ -44,7 +47,37 @@ class MainActivity : AppCompatActivity() {
                         Log.d(TAG, "-> ${it.nickname}")
                     }
 
-                    characters?.let { recyclerInit(it) }
+                    //Analizamos
+                    val favorites = getFavorites()?.split(",")
+
+                    // Lista definitiva
+                    var temp: List<Character?>
+                    var temp2: List<Character>
+                    var counter = 0
+
+                    for (i in characters!!.indices) {//analizo el array que viene del API
+                        for (j in favorites!!.indices) {//Analizo solo los favoritos
+                            if (characters[i].char_id == favorites[j].toInt()) {
+                                //los fav que hagan match
+                                characters[i].isSelected = true
+                                //temp?.toMutableList()?.add(counter, characters[i])
+                                counter++
+                            } else {
+                                //los que no esten en fav
+                                //temp2?.toMutableList()?.add(counter, characters[i])
+                                counter++
+                            }
+                        }
+                    }
+
+                    Log.d(TAG, "onResponse: ")
+
+                    //val valor = (temp?.size?.minus(1))
+                    //for (i in valor!! until characters.size) {
+                     //   Log.d(TAG, "onResponse: ${temp!![i]?.name}")
+                    //}
+
+                     characters?.let { recyclerInit(it) }
 
                 } else
                     Log.e(TAG, "onResponse: ${response.code()}")
@@ -59,15 +92,35 @@ class MainActivity : AppCompatActivity() {
 
     private fun recyclerInit(it: List<Character>) {
         recyclerAdapter = BreakingBadAdapter(this) { item, position, status ->
-            Log.d(TAG, "onCreate: ${item.nickname}")
+
+            //save to favorites
+            SharedPrefManager().setStringPrefVal(
+                applicationContext,
+                getString(R.string.kfav),
+                addToFavorites(item.char_id)
+            )
 
             it[position].isSelected = status
-            Log.d(TAG, "onCreate: ${it[position].isSelected}")
-
             recyclerAdapter.setSuperHeroes(it)
         }
         recycle.layoutManager = LinearLayoutManager(this)
         recycle.adapter = recyclerAdapter
         recyclerAdapter.setSuperHeroes(it)
     }
+
+    private fun getFavorites() =
+        SharedPrefManager().getStringVal(applicationContext, getString(R.string.kfav))
+
+    private fun addToFavorites(charId: Int?): String? {
+        val temp = SharedPrefManager().getStringVal(applicationContext, getString(R.string.kfav))
+        var register = ""
+        if (temp!!.isEmpty()) {
+            register = charId.toString()
+        } else {
+            register = "$temp,$charId"
+        }
+        return register
+    }
+
+
 }

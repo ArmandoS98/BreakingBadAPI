@@ -25,5 +25,6 @@ class DetailsActivity : AppCompatActivity() {
     private fun views(cc: Character) {
         tvCharacterName.text = cc.name
         tvNickName.text = cc.nickname
+        
     }
 }

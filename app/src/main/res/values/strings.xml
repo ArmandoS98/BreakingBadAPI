@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">BreakingBadAPI</string>
+    <string name="app_name">Breaking Bad</string>
     <string name="key_character">character</string>
     <string name="key_validar_primera_vez">key_elements</string>
     <string name="kfav">kfav</string>

@@ -6,15 +6,14 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.annotation.LayoutRes
-import androidx.core.content.ContextCompat.startActivity
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.breakingbadapi.DetailsActivity
 import com.example.breakingbadapi.Pojos.Character
 import com.example.breakingbadapi.R
 import kotlinx.android.synthetic.main.item_card.view.*
+import java.util.*
 
 class BreakingBadAdapter(
     private val contexto: Context,
@@ -23,10 +22,16 @@ class BreakingBadAdapter(
     RecyclerView.Adapter<BreakingBadAdapter.ViewHolder>() {
 
     var movieList: List<Character> = listOf()
+    var contador = 0
 
     fun setSuperHeroes(movieList: List<Character>) {
-        this.movieList = movieList;
-        //notifyDataSetChanged()
+        this.movieList = movieList
+//        notifyDataSetChanged()
+    }
+
+    fun swapeItem(fromPosition: Int, toPosition: Int) {
+        Collections.swap(movieList, fromPosition, toPosition)
+        notifyItemMoved(fromPosition, toPosition)
     }
 
     fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachRoot: Boolean = false): View {
@@ -45,6 +50,7 @@ class BreakingBadAdapter(
         //Image
         Glide.with(contexto)
             .load(movieList[position].img)
+            .centerCrop()
             .into(holder.itemView.product_image)
 
         //Heart - Animation
@@ -54,6 +60,9 @@ class BreakingBadAdapter(
         if (movieList[position].isSelected) {
             lottieAnim.speed = 1f
             lottieAnim.playAnimation()
+/*
+            if (position > 1)
+                swapeItem(position, 0)*/
         } else {
             lottieAnim.speed = 0f
             lottieAnim.playAnimation()
@@ -62,19 +71,21 @@ class BreakingBadAdapter(
         //Este se ejecuta cuando el usuario da click
         lottieAnim.setOnClickListener {
             var isCheckt = movieList[position].isSelected
-            Log.d(TAG, "onBindViewHolder IN: ${isCheckt}")
+            Log.d(TAG, "onBindViewHolder IN: $isCheckt")
             val statusC: Boolean
             if (isCheckt) {
                 lottieAnim.speed = 0f
                 lottieAnim.playAnimation()
                 isCheckt = false
                 statusC = isCheckt
+
                 Log.d(TAG, "onBindViewHolder OUT: false")
             } else {
                 lottieAnim.speed = 1f
                 lottieAnim.playAnimation()
                 isCheckt = true
                 statusC = isCheckt
+
                 Log.d(TAG, "onBindViewHolder OUT: true")
             }
             listener(movieList[position], position, statusC)

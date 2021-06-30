@@ -102,16 +102,14 @@ class MainActivity : AppCompatActivity() {
                     getString(R.string.kfav),
                     addToFavorites(item.char_id)
                 )
-                Log.d(TAG, "recyclerInit: ${getFavorites()}")
+//                Log.d(TAG, "recyclerInit: ${getFavorites()}")
 
             } else {
                 //Eliminar
                 Log.d(TAG, "recyclerInit: ELIMINANDO ACCION")
                 val temp = getFavorites()
                 val repl = item.char_id
-                var list = temp!!.replace("$repl", "")
-                var esComa = false
-                var current = ""
+                val list = temp!!.replace("$repl", "")
 
                 val charItems = list.toCharArray()
 

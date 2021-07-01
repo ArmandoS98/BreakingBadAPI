@@ -1,5 +1,7 @@
 package com.example.breakingbadapi.Adapters
 
+import android.app.Activity
+import android.app.ActivityOptions
 import android.content.Context
 import android.content.Intent
 import android.util.Log
@@ -60,9 +62,6 @@ class BreakingBadAdapter(
         if (movieList[position].isSelected) {
             lottieAnim.speed = 1f
             lottieAnim.playAnimation()
-/*
-            if (position > 1)
-                swapeItem(position, 0)*/
         } else {
             lottieAnim.speed = 0f
             lottieAnim.playAnimation()
@@ -105,7 +104,16 @@ class BreakingBadAdapter(
             val item: Character = movieList[adapterPosition]
             var intent = Intent(v?.context, DetailsActivity::class.java)
             intent.putExtra(v?.context?.getString(R.string.key_character), item)
-            v?.context?.startActivity(intent)
+
+            //Animacion
+            val animation =
+                ActivityOptions.makeSceneTransitionAnimation(
+                    contexto as Activity?,
+                    v?.product_image,
+                    "sharedName"
+                )
+
+            v?.context?.startActivity(intent, animation.toBundle())
         }
     }
 

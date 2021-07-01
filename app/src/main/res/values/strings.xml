@@ -3,4 +3,14 @@
     <string name="key_character">character</string>
     <string name="key_validar_primera_vez">key_elements</string>
     <string name="kfav">kfav</string>
+    <string name="birthday">Birthday</string>
+    <string name="nick_nmae">Nick Nmae</string>
+    <string name="fecha">03-06-1989</string>
+    <string name="occupation">Occupation</string>
+    <string name="status">Status</string>
+    <string name="texto">texto</string>
+    <string name="portrayed">Portrayed</string>
+    <string name="appearance">Appearance</string>
+    <string name="category">Category</string>
+    <string name="better_call_saul_appearance">Better Call Saul Appearance</string>
 </resources>
